@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: {{ .Values.namespace }}
+  labels:
+    name: db
+spec:
+  selector:
+    app: {{ .Release.Name }}-db-app
+  type: {{ .Values.services.db.type}}
+  ports:
+    - name: {{ .Values.services.db.name}}
+      protocol: {{ .Values.services.db.protocol}}
+      port: {{ .Values.services.db.port}}
+      targetPort: {{ .Values.services.db.targetPort }}

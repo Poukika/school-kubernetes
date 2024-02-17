@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-db-app
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}-db-app
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-db-app
+  replicas: {{ .Values.postgres.replicas }}
+  serviceName: postgres
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-db-app
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-db-app
+          image: {{ .Values.postgres.image }}
+          imagePullPolicy: {{ .Values.postgres.imagePullPolicy }}
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-db-rootpass
+          volumeMounts:
+            - name: db-pvc
+              mountPath: {{ .Values.postgres.mountPath }}
+          ports:
+            - containerPort: {{ .Values.postgres.port }}
+  volumeClaimTemplates:
+    - metadata:
+        name: db-pvc
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "local-path"
+        resources:
+          requests:
+            storage: 1Gi
+

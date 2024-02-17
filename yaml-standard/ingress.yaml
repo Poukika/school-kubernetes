@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: standard
+  annotations:
+    cert-manager.io/cluster-issuer: exam-kube-clusterissuer
+spec:
+  ingressClassName: traefik
+  tls:
+    - secretName: secrettls
+      hosts:
+        - kube-exam-yaml.com
+        - kube-pgadmin-yaml.com
+  rules:
+    - host: kube-exam-yaml.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fastapi-clusterip
+                port:
+                  number: 80
+    - host: kube-pgadmin-yaml.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pgadmin-clusterip
+                port:
+                  number: 80

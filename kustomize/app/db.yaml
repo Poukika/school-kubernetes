@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db-app
+  namespace: standard
+  labels:
+    app: db-app
+spec:
+  selector:
+    matchLabels:
+      app: db-app
+  replicas: 2
+  serviceName: postgres
+  template:
+    metadata:
+      labels:
+        app: db-app
+    spec:
+      containers:
+        - name: db-app
+          image: postgres:12.0-alpine
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: db-rootpass
+          volumeMounts:
+            - name: db-pvc
+              mountPath: /var/lib/postgresql/data
+          ports:
+            - containerPort: 5432
+  volumeClaimTemplates:
+    - metadata:
+        name: db-pvc
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "local-path"
+        resources:
+          requests:
+            storage: 1Gi
+

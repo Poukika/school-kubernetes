@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v
+kind: ClusterIssuer
+metadata:
+  name: {{ .Release.Name }}-exam-kube-clusterissuer
+  labels:
+    name: {{ .Release.Name }}-exam-kube-clusterissuer
+spec:
+  acme:
+    server: {{ .Values.clusterIssuer.server }}
+    email: {{ .Values.clusterIssuer.email }}
+    privateKeySecretRef:
+      name: {{ .Values.clusterIssuer.privateKeyRef }}
+    solvers:
+      - http01:
+          ingress:
+            class: {{ .Values.clusterIssuer.ingressClass }}

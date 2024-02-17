@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-pgadmin
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-pgadmin
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-pgadmin
+    spec:
+      containers:
+        - name: pgadmin
+          image: {{ .Values.pgadmin.image }}
+          imagePullPolicy: {{ .Values.pgadmin.imagePullPolicy}}
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-pgadmin-rootpass
+          ports:
+            - containerPort: {{ .Values.pgadmin.port }}
