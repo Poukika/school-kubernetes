@@ -1,4 +1,4 @@
-# school-kubernetes
+# School-kubernetes
 
 Cet examen met en pratique la mise en ligne d'une API python (fastAPI) connecté à une DB postgresSQL et un outil de
 d'administation de DB (pgAdmin).
